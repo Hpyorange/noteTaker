@@ -19,34 +19,25 @@ app.use(express.json());
 // app.use('/api/notes',api)
 
 //get method '/motes
-app.get('/notes',(req,res)=>{
+app.get('/notes', (req, res) => {
   res.sendFile(path.join(__dirname, './public/notes.html'))
-})
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, './public/index.html'));
 })
 
 
 app.get('/api/notes', (req, res) => {
-
-  fs.readFile(path.join(__dirname, './db/db.json')),'utf8', (err, data) => {
-
-    res.json(JSON.parse(data));
-}
-
-  // res.sendFile(path.join(__dirname, './db/db.json'));
+  res.sendFile(path.join(__dirname, './db/db.json'))
+  // console.log(typeof path.join(__dirname, './db/db.json'));
 });
 
 
 app.post('/api/notes', (req, res) => {
-let db = fs.readFileSync('db/db.json');
-db = JSON.parse(db);
+  let db = fs.readFileSync('db/db.json');
+  db = JSON.parse(db);
 
-let input = {
-  title: req.body.title,
-  text: req.body.text,
-  id: uuidv4(),
+  let input = {
+    title: req.body.title,
+    text: req.body.text,
+    id: uuidv4(),
   };
 
   db.push(input);
@@ -62,6 +53,10 @@ app.delete('/api/notes/:id', (req, res) => {
 
   fs.writeFileSync('db/db.json', JSON.stringify(deleteNotes));
   res.json(deleteNotes);
+})
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/index.html'));
 })
 
 app.listen(PORT, () =>
